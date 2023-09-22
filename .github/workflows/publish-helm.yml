@@ -120,22 +120,9 @@ jobs:
         ref: website
         path: website
     
-    - name: check
-      run: |
-        ls -la
-        echo "------------------------------"
-        cd index
-        ls -la
-        echo "------------------------------"
-        cd ..
-        cd website
-        ls -la
-    
     - name: Copy index.yaml to website branch
       run: |
-        cat index/index.yaml > website/static/index.yaml
-        cd website/static
-        ls -la
+        cp index/index.yaml > website/static/
         git config user.name "${{ vars.WORKFLOW_USER_NAME }}"
         git config user.email "${{ vars.WORKFLOW_USER_EMAIL }}"
         git add .
