@@ -133,12 +133,12 @@ jobs:
     
     - name: Copy index.yaml to website branch
       run: |
-        pwd
-        cat index/index.yaml
         cat index/index.yaml > website/static/index.yaml
+        cd website/static
+        ls -la
         git config user.name "${{ vars.WORKFLOW_USER_NAME }}"
         git config user.email "${{ vars.WORKFLOW_USER_EMAIL }}"
-        git add index.yaml
+        git add .
         git commit -m "Add index.yaml to website"
         git push
         
