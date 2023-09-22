@@ -114,21 +114,21 @@ jobs:
         git commit -m "Release ${{ needs.create_release_tag.outputs.tag }}"
         git push
     
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        ref: website
+
     - name: Copy index.yaml to website branch
-      env:
-        SRC_FOLDER_PATH: 'index'
-        TARGET_BRANCH: 'website'
       run: |
-        files=$(find $SRC_FOLDER_PATH -type f) # get the file list
+        git checkout helm-index -- index.yaml
+        mv index.yaml static
         git config user.name "${{ vars.WORKFLOW_USER_NAME }}"
         git config user.email "${{ vars.WORKFLOW_USER_EMAIL }}"
-        git fetch                         # fetch branches
-        git checkout $TARGET_BRANCH       # checkout to your branch
-        git checkout ${GITHUB_REF##*/} -- $files # copy files from the source branch
-        git add -A
-        git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
-        git push origin $TARGET_BRANCH # push to remote branch
-
+        git add index.yaml
+        git commit -m "Add index.yaml to website"
+        git push
+        
     - name: Upload package
       run: |
         upload_url="${{ needs.create_release_tag.outputs.upload_url }}"
