@@ -126,8 +126,8 @@ jobs:
 
     - name: Copy index.yaml to website branch
       run: |
-        git checkout helm-index -- index.yaml
-        mv index.yaml static
+        mv index/index.yaml website/static/
+        cd website
         git config user.name "${{ vars.WORKFLOW_USER_NAME }}"
         git config user.email "${{ vars.WORKFLOW_USER_EMAIL }}"
         git add index.yaml
