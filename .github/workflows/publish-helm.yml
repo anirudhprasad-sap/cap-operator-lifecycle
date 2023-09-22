@@ -120,10 +120,6 @@ jobs:
         ref: website
         path: website
     
-    - name: check
-      run: |
-        ls -la
-
     - name: Copy index.yaml to website branch
       run: |
         mv index/index.yaml website/static/
