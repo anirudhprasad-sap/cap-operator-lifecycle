@@ -123,6 +123,7 @@ jobs:
     - name: Copy index.yaml to website branch
       run: |
         cat index/index.yaml > website/static/index.yaml
+        cd website
         git config user.name "${{ vars.WORKFLOW_USER_NAME }}"
         git config user.email "${{ vars.WORKFLOW_USER_EMAIL }}"
         git add .
