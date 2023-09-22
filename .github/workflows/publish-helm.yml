@@ -52,7 +52,7 @@ jobs:
       with:
         tag: ${{ steps.get_tag.outputs.tag }}
         commit: ${{ steps.get_target_commit.outputs.sha }}
-        makeLatest: true
+        makeLatest: false
         prerelease: false
         allowUpdates: false
   
@@ -125,7 +125,6 @@ jobs:
         git fetch                         # fetch branches
         git checkout $TARGET_BRANCH       # checkout to your branch
         git checkout ${GITHUB_REF##*/} -- $files # copy files from the source branch
-        ls -la
         git add -A
         git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
         git push origin $TARGET_BRANCH # push to remote branch
