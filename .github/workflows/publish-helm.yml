@@ -145,15 +145,6 @@ jobs:
           --data-binary @$file \
           "$upload_url?name=$(basename $file)"
 
-    - name: Trigger workflow b
-      uses: actions/github-script@v5
-      with:
-        script: |
-          github.actions.createWorkflowDispatch({
-            workflow: 'Publish Website',
-            ref: 'website'
-          })
-
   publish-to-packages:
     name: Publish chart to github packages
     needs: create_release_tag
