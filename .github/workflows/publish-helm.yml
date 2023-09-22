@@ -113,6 +113,21 @@ jobs:
         git add index.yaml
         git commit -m "Release ${{ needs.create_release_tag.outputs.tag }}"
         git push
+    
+    - name: Copy index.yaml to website branch
+      env:
+        SRC_FOLDER_PATH: 'index'
+        TARGET_BRANCH: 'static'
+      run: |
+        files=$(find $SRC_FOLDER_PATH -type f) # get the file list
+        git config user.name "${{ vars.WORKFLOW_USER_NAME }}"
+        git config user.email "${{ vars.WORKFLOW_USER_EMAIL }}"
+        git fetch                         # fetch branches
+        git checkout $TARGET_BRANCH       # checkout to your branch
+        git checkout ${GITHUB_REF##*/} -- $files # copy files from the source branch
+        git add -A
+        git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
+        git push origin $TARGET_BRANCH # push to remote branch
 
     - name: Upload package
       run: |
@@ -128,15 +143,6 @@ jobs:
           -H "Content-Type: $(file -b --mime-type $file)" \
           --data-binary @$file \
           "$upload_url?name=$(basename $file)"
-
-    - name: Upload index
-      uses: actions/upload-pages-artifact@v2
-      with:
-        path: index
-
-    - name: Publish index
-      id: publish-index
-      uses: actions/deploy-pages@v2
 
   publish-to-packages:
     name: Publish chart to github packages
