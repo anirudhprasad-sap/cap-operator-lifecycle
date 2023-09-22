@@ -119,6 +119,7 @@ jobs:
       with:
         ref: website
         path: website
+        token: ${{ secrets.WORKFLOW_USER_TOKEN }}
     
     - name: Copy index.yaml to website branch
       run: |
