@@ -117,7 +117,7 @@ jobs:
     - name: Copy index.yaml to website branch
       env:
         SRC_FOLDER_PATH: 'index'
-        TARGET_BRANCH: 'static'
+        TARGET_BRANCH: 'website'
       run: |
         files=$(find $SRC_FOLDER_PATH -type f) # get the file list
         git config user.name "${{ vars.WORKFLOW_USER_NAME }}"
@@ -125,6 +125,7 @@ jobs:
         git fetch                         # fetch branches
         git checkout $TARGET_BRANCH       # checkout to your branch
         git checkout ${GITHUB_REF##*/} -- $files # copy files from the source branch
+        ls -la
         git add -A
         git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
         git push origin $TARGET_BRANCH # push to remote branch
