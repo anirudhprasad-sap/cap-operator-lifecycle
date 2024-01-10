@@ -55,10 +55,11 @@ jobs:
         run: |
           echo "Version=${{ steps.get_version_upload_url.outputs.version }}"
 
-      - name: Update version in kustomization.yaml
+      - name: Update version in kustomization.yaml & default CRO
         run: |
           yq -i '.images[0].newTag="${{ steps.get_version_upload_url.outputs.version }}"' config/default/kustomization.yaml
           yq -i '.labels[0].pairs."app.kubernetes.io/version"="${{ steps.get_version_upload_url.outputs.version }}"' config/default/kustomization.yaml
+          yq -i '.metadata.labels."app.kubernetes.io/version"="${{ steps.get_version_upload_url.outputs.version }}"' config/samples/operator_v1alpha1_capoperator.yaml
       
       - name: Download kustomize cli
         run: |
