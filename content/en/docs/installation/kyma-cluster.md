@@ -1,11 +1,11 @@
 ---
-title: "Kyma Cluster"
-linkTitle: "Kyma Cluster"
+title: "Kyma Cluster (SAP internal cluster)"
+linkTitle: "Kyma Cluster (SAP internal cluster)"
 weight: 10
 type: "docs"
 tags: ["setup"]
 description: >
-  How to install CAP Operator in a Kyma cluster
+  How to install CAP Operator in a Kyma cluster (SAP internal cluster)
 ---
 
 The CAP Operator is available in both the `fast` and `regular` channels of Kyma.
