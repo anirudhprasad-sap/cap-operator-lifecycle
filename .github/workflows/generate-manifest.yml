@@ -5,7 +5,7 @@ on:
   release:
     types: [published]
 
-  workflow_dispatch: 
+  workflow_dispatch:
     inputs:
       version:
         type: string
@@ -25,12 +25,12 @@ defaults:
 jobs:
   generate_manifest:
     name: Generate manifest
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Get version and upload URL
         id: get_version_upload_url
         run: |
@@ -60,25 +60,25 @@ jobs:
           yq -i '.images[0].newTag="${{ steps.get_version_upload_url.outputs.version }}"' config/default/kustomization.yaml
           yq -i '.labels[0].pairs."app.kubernetes.io/version"="${{ steps.get_version_upload_url.outputs.version }}"' config/default/kustomization.yaml
           yq -i '.metadata.labels."app.kubernetes.io/version"="${{ steps.get_version_upload_url.outputs.version }}"' config/samples/operator_v1alpha1_capoperator.yaml
-      
+
       - name: Download kustomize cli
         run: |
           curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
           chmod +x kustomize
-      
+
       - name: Generate Manifests
         run: |
           ./kustomize build config/default/ > $MANIFEST_FILENAME
           cat $MANIFEST_FILENAME
           cat config/samples/operator_v1alpha1_capoperator.yaml > $CR_FILENAME
-      
+
       - name: Determine target commit
         id: get_target_commit
         run: |
           sha=$(git rev-parse HEAD)
           echo "Target commit: $sha"
           echo "sha=$sha" >> $GITHUB_OUTPUT
-      
+
       - name: Wait for check suites to complete
         uses: sap-contributions/await-check-suites@master
         if: inputs.version == ''
@@ -88,7 +88,7 @@ jobs:
           timeoutSeconds: 1800
           failStepIfUnsuccessful: true
           appSlugFilter: github-actions
-      
+
       - name: Upload manifest & default CR to release
         if: inputs.upload_url != '' || github.event.release.upload_url != ''
         run: |
@@ -102,7 +102,7 @@ jobs:
             -H "Content-Type: $(file -b --mime-type $file)" \
             --data-binary @$file \
             "$upload_url?name=$(basename $file)"
-          
+
           file=$CR_FILENAME
           echo "Uploading default CR $file to $upload_url ..."
           curl -sSf \
